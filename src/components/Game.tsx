@@ -445,16 +445,20 @@ const GameCanvas = ({
           if (Math.abs(ang)>FOV/2+0.4) return;
 
           const sx=(0.5+ang/FOV)*W;
-          const size=Math.min(H*1.4, H/Math.max(0.1,d));
+          const size=Math.min(H*1.4, Math.max(40, H/Math.max(0.1,d)));
           const sy=H/2;
-          const col=Math.max(0,Math.min(W-1,Math.floor(sx)));
-
-          // ✅ ИСПРАВЛЕНО: враг виден если БЛИЖЕ стены (d < zbuf)
-          if (d >= zbuf[col]-0.05) return;
+          // Проверяем видимость по нескольким колонкам (левый край, центр, правый край спрайта)
+          const halfW = Math.max(1, size * 0.18);
+          const colL = Math.max(0, Math.min(W-1, Math.floor(sx - halfW)));
+          const colC = Math.max(0, Math.min(W-1, Math.floor(sx)));
+          const colR = Math.max(0, Math.min(W-1, Math.floor(sx + halfW)));
+          // Виден если хотя бы одна колонка не закрыта стеной
+          const visible = d < zbuf[colL]+0.1 || d < zbuf[colC]+0.1 || d < zbuf[colR]+0.1;
+          if (!visible) return;
 
           const flash=e.hitFlash>0;
           ctx.save();
-          ctx.globalAlpha=Math.min(1, 1.5/(Math.max(1,d)));
+          ctx.globalAlpha=1;
 
           // Тело
           ctx.fillStyle=flash?'#ff4422':'#8b2a1e';
