@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import Icon from '@/components/ui/icon';
 import { Button } from '@/components/ui/button';
+import Game from '@/components/Game';
 
 const HERO_IMG =
   'https://cdn.poehali.dev/projects/5a6d7fdb-1994-4da6-9cb0-372660687c52/files/27997b54-add4-434f-b5b1-22041c39ba25.jpg';
@@ -56,6 +57,9 @@ const Stat = ({ label, value }: { label: string; value: number }) => (
 
 const Index = () => {
   const [menu, setMenu] = useState(false);
+  const [playing, setPlaying] = useState(false);
+
+  if (playing) return <Game onExit={() => setPlaying(false)} />;
 
   return (
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
@@ -76,7 +80,10 @@ const Index = () => {
               </a>
             ))}
           </nav>
-          <Button className="hidden md:inline-flex font-display uppercase tracking-widest clip-tag rounded-none">
+          <Button
+            onClick={() => setPlaying(true)}
+            className="hidden md:inline-flex font-display uppercase tracking-widest clip-tag rounded-none"
+          >
             Играть
           </Button>
           <button className="md:hidden" onClick={() => setMenu(!menu)}>
@@ -96,7 +103,15 @@ const Index = () => {
               </a>
             ))}
             <div className="p-4">
-              <Button className="w-full font-display uppercase tracking-widest rounded-none">Играть</Button>
+              <Button
+                onClick={() => {
+                  setMenu(false);
+                  setPlaying(true);
+                }}
+                className="w-full font-display uppercase tracking-widest rounded-none"
+              >
+                Играть
+              </Button>
             </div>
           </div>
         )}
@@ -140,16 +155,17 @@ const Index = () => {
             >
               <Button
                 size="lg"
+                onClick={() => setPlaying(true)}
                 className="font-display uppercase tracking-widest text-base h-14 px-8 rounded-none clip-tag animate-glow-pulse"
               >
-                <Icon name="Apple" className="mr-2" size={20} /> App Store
+                <Icon name="Crosshair" className="mr-2" size={20} /> Играть сейчас
               </Button>
               <Button
                 size="lg"
                 variant="outline"
                 className="font-display uppercase tracking-widest text-base h-14 px-8 rounded-none border-foreground/30"
               >
-                <Icon name="Play" className="mr-2" size={20} /> Google Play
+                <Icon name="Play" className="mr-2" size={20} /> Трейлер
               </Button>
             </div>
           </div>
@@ -319,15 +335,12 @@ const Index = () => {
             Скачай WARFRONT и вступай в бой. Доступно на iOS и Android с адаптивным управлением.
           </p>
           <div className="mt-9 flex flex-wrap justify-center gap-4">
-            <Button size="lg" className="font-display uppercase tracking-widest h-14 px-8 rounded-none clip-tag">
-              <Icon name="Apple" className="mr-2" size={20} /> App Store
-            </Button>
             <Button
               size="lg"
-              variant="outline"
-              className="font-display uppercase tracking-widest h-14 px-8 rounded-none border-foreground/30"
+              onClick={() => setPlaying(true)}
+              className="font-display uppercase tracking-widest h-14 px-8 rounded-none clip-tag animate-glow-pulse"
             >
-              <Icon name="Play" className="mr-2" size={20} /> Google Play
+              <Icon name="Crosshair" className="mr-2" size={20} /> Играть в браузере
             </Button>
           </div>
         </div>
